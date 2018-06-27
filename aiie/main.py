@@ -178,7 +178,7 @@ def aiie(args):
 
     cutoff = args.min_support_read
 
-    # fout = open(args.out_file, "w")
+    fout = open(args.out_file, "w")
     for k in summary_dict:
         for p in summary_dict[k]:
             if len(summary_dict[k][p]) >= cutoff:
