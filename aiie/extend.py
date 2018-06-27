@@ -94,10 +94,10 @@ def rev_comp_right_extend(rev_ref_seq, read_seq, rev_ref_pos, read_pos, l=10, nm
                     return False
         return True
 
-def checkmate(read, ref_match):
-    tmp = ref_match.split(":")
+def checkmate(read, ref_match, ref_k):
+    tmp = ref_match[0].split(":")
     ref_chr = tmp[0]
-    ref_pos = int(tmp[1])
+    ref_pos = int(tmp[1]) + ref_match[1] + ref_k
     mate_chr = read.next_reference_name
     mate_pos = read.next_reference_start
     if mate_chr == ref_chr and abs(mate_pos-ref_pos) < 1000:

@@ -109,7 +109,8 @@ def aiie(args):
     gc.collect()
     #extend k-mer
     logger.info("extend k-mer")
-    
+    # #tmp out
+    # fout = open(args.out_file, "w")
     extend_results = []
     for bam_file in args.input_bam_list:
         samfile = pysam.AlignmentFile(bam_file, "rb")
@@ -134,8 +135,9 @@ def aiie(args):
                                     left = left_extend(ref_seq_dict[ref_match[0]], myseq, ref_match[1], i, extend_len, allow_mis)
                                     right = right_extend(alu_seq, myseq, alu_match[1], i, alu_k, km, extend_len, allow_mis)
                                     if left and right:
-                                        if checkmate(read, ref_match[0]):
+                                        if checkmate(read, ref_match, ref_k):
                                             # out_list = [ref_match[0], str(ref_match[1]+ref_k), alu_match[0], str(alu_match[1]), myseq[i:i+km], read.query_name, str(int(left)), str(int(right)), str(int(left and right)), "1"]
+                                            # out_list = [ref_match[0], str(ref_match[1]+ref_k), alu_match[0], str(alu_match[1]), myseq[i:i+km], read.query_name, read.next_reference_name, str(read.next_reference_start)]
                                             # fout.write("\t".join(out_list)+"\n")
                                             out_list = [ref_match[0], ref_match[1]+ref_k, alu_match[0], alu_match[1], read.query_name]
                                             extend_results.append(out_list)
@@ -147,8 +149,9 @@ def aiie(args):
                                     left = rev_comp_left_extend(alu_seq_revcomp, myseq, alu_len-alu_match[1], i, alu_k, extend_len, allow_mis)
                                     right = right_extend(ref_seq_dict[ref_match[0]], myseq, ref_match[1], i, ref_k, km, extend_len, allow_mis)
                                     if left and right:
-                                        if checkmate(read, ref_match[0]):
+                                        if checkmate(read, ref_match, 0):
                                             # out_list = [ref_match[0], str(ref_match[1]), alu_match[0], str(alu_match[1]), myseq[i:i+km], read.query_name, str(int(left)), str(int(right)), str(int(left and right)), "2"]
+                                            # out_list = [ref_match[0], str(ref_match[1]), alu_match[0], str(alu_match[1]), myseq[i:i+km], read.query_name, read.next_reference_name, str(read.next_reference_start)]
                                             # fout.write("\t".join(out_list)+"\n")
                                             out_list = [ref_match[0], ref_match[1], alu_match[0], alu_match[1], read.query_name]
                                             extend_results.append(out_list)
@@ -175,7 +178,7 @@ def aiie(args):
 
     cutoff = args.min_support_read
 
-    fout = open(args.out_file, "w")
+    # fout = open(args.out_file, "w")
     for k in summary_dict:
         for p in summary_dict[k]:
             if len(summary_dict[k][p]) >= cutoff:
